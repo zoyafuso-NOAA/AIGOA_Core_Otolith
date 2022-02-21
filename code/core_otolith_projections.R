@@ -34,6 +34,8 @@ AI <- readRDS("data/AI_RACEBASE.RDS")
 specimen <- AI$specimen
 catch <- AI$catch
 
+allocation <- table(read.csv("data/AIallocation420.csv")$STRATUM)
+
 ###############################################################################
 ####   Import core requests for a given year
 ###############################################################################  
@@ -78,6 +80,11 @@ bootstrap_total_work <-
                         paste0(c(2.5, 25, 50, 75, 97.5), "%"),
                         NULL))
 
+bootstrap_over_thirty <- 
+  array(dim = c(length(years), n_boots),
+        dimnames = list(years,
+                        NULL))
+
 for (iyear in years) { ## Loop over years -- start
   
   ## Subset the catches for iyear for just the interested species
@@ -98,11 +105,11 @@ for (iyear in years) { ## Loop over years -- start
   ## Remove hauls w/o lat/lon info.
   haul_locs <- subset(x = AI$haul, 
                       subset = HAULJOIN %in% catch_wide$HAULJOIN,
-                      select = c(HAULJOIN, START_LONGITUDE, START_LATITUDE))
+                      select = c(HAULJOIN, START_LONGITUDE, START_LATITUDE, STRATUM))
   
-  catch_wide[, c("LON", "LAT")] <- 
+  catch_wide[, c("LON", "LAT", "STRATUM")] <- 
     haul_locs[match(catch_wide$HAULJOIN, haul_locs$HAULJOIN), 
-              c("START_LONGITUDE", "START_LATITUDE")]
+              c("START_LONGITUDE", "START_LATITUDE", "STRATUM")]
   catch_wide <- catch_wide[!is.na(catch_wide$LON), ]
   
   ## Based on the longitude of the station, assign management area
@@ -119,11 +126,17 @@ for (iyear in years) { ## Loop over years -- start
     ## Set seed
     set.seed(iter * 23432)
     
-    ## Draw the bootstrap sample
-    bootstrap_sample <- sample(x = 1:nrow(catch_wide),
-                               size = n_sample, 
-                               replace = TRUE)
-    bootstrap_hauls <- catch_wide[bootstrap_sample, ]
+    ## Draw the bootstrap sample, stratified by stratum
+    boot_idx <- c()
+    
+    for (istratum in sort(unique(catch_wide$STRATUM)) ) {
+      isample <- allocation[istratum]
+      boot_idx <- c(boot_idx, sample(x = which(catch_wide$STRATUM == istratum), 
+                                     size = isample, 
+                                     replace = TRUE))
+    }
+  
+    bootstrap_hauls <- catch_wide[boot_idx, ]
     
     ## Result output to put ototliths collected
     bootstrap_otos <- matrix(nrow = n_sample, 
@@ -147,7 +160,7 @@ for (iyear in years) { ## Loop over years -- start
         bootstrap_otos[ihaul, ispp_code] <-
           ifelse(test = collect_otos == TRUE,
                  no = 0,
-                 yes = min(icatch, as.integer(collection[ispp, iarea]) ))
+                 yes = min(icatch, as.integer(collection[ispp, iarea])) )
       } ## Loop over species -- end
       
       ## Special collection rules for pollock
@@ -168,6 +181,8 @@ for (iyear in years) { ## Loop over years -- start
     bootstrap_total_work[iyear, , iter] <- 
       quantile(x = rowSums(bootstrap_otos),
                probs = c(0.025, 0.25, 0.5, 0.75, 0.975))
+    bootstrap_over_thirty[iyear, iter] <- 
+      sum(rowSums(bootstrap_otos) > 30) / n_sample
     
     if(iter%%10 == 0) print(paste0("Finished with ", iter, " of ", n_boots, 
                                    ", Year ", iyear))
@@ -178,5 +193,6 @@ for (iyear in years) { ## Loop over years -- start
 ###############################################################################
 ####   Save Results
 ###############################################################################  
-save(list = c("bootstrap_oto_main", "bootstrap_total_work", "total_ages"), 
+save(list = c("bootstrap_oto_main", "bootstrap_total_work", 
+              "bootstrap_over_thirty", "total_ages"), 
      file = "results/bootstrap_results.RData")
