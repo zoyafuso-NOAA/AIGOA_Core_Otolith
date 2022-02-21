@@ -18,7 +18,6 @@ library(readxl)
 load("results/bootstrap_results.RData")
 collection <- readxl::read_xlsx(path = "data/AI_core_collections.xlsx", 
                                 sheet = "2022 collection") 
-collection <- subset(x = collection, subset = total_requested > 0)
 
 ###############################################################################
 ####   Plot boxplot time series of total bootstrapped collected otoliths 
@@ -27,11 +26,11 @@ collection <- subset(x = collection, subset = total_requested > 0)
 {
   ## Open Device
   pdf(file = "results/species_bootstrap.pdf",
-     width = 8.5, height = 11,
-     family = "serif", version = "1.7")
+      width = 8.5, height = 11,
+      family = "serif", version = "1.7")
   
   ## Plot layout
-  par(mfrow = c(6, 3), mar = c(2, 3, 3, 1), oma = c(5, 5, 3, 5))
+  par(mfrow = c(5, 4), mar = c(2, 3, 3, 1), oma = c(5, 5, 3, 5))
   
   for (irow in 1:nrow(collection) ) { ## Loop over species -- start
     
@@ -39,7 +38,7 @@ collection <- subset(x = collection, subset = total_requested > 0)
     species_name <- collection$common_name[irow]
     target_requested <- !is.na(collection$total_requested[irow])
     target_n <- collection$total_requested[irow]
-
+    
     ## Calculate quantiles of the total otoliths collected
     temp_dist <- apply(X = bootstrap_oto_main[, irow, ], 
                        MARGIN = 1, 
@@ -78,7 +77,7 @@ collection <- subset(x = collection, subset = total_requested > 0)
     axis(side = 2, las = 1)
     mtext(side = 3, text = species_name, line = 0.5)
   }  ## Loop over species -- close
-   
+  
   ## Add Legend
   plot(1, type = "n", axes = F, ann = F, xlim = c(0, 10), ylim = c(0, 100))
   rect(xleft = 4, xright = 6, ybottom = 5, ytop = 95, 
@@ -91,7 +90,7 @@ collection <- subset(x = collection, subset = total_requested > 0)
   mtext(side = 3, text = "percentile")
   
   ## Add main panel axis labels
-  mtext(side = 1, text = "Year", font = 2, outer = T)
+  mtext(side = 1, text = "Year", font = 2, outer = T, line = 1)
   mtext(side = 2, text = "Total Otoliths Collected", font = 2, outer = T)
   
   ############################################################################
@@ -106,9 +105,10 @@ collection <- subset(x = collection, subset = total_requested > 0)
                       MARGIN = c(1, 2),
                       FUN = median)
   
-  ###############################################################################
+  ##################################################
   ####   
-  ############################################################################### ## Base plot
+  ##################################################  
+  ## Base plot
   plot(1, type = "n", axes = F, ann = F,
        xlim = c(1, 5),
        ylim = range(total_work) )
@@ -131,7 +131,72 @@ collection <- subset(x = collection, subset = total_requested > 0)
   axis(side = 2, las = 1)
   mtext(side = 3, text = "Haul-Level total otoliths", line = 0.5)
   
+  ############################################################################
+  ####   Plot 
+  ############################################################################
+  total_work <- apply(X = bootstrap_oto_main,
+                      MARGIN = c(1, 3),
+                      FUN = sum)
+  total_work <- apply(X = total_work, 
+                      MARGIN = 1,
+                      FUN = quantile,
+                      probs = c(0.025, 0.25, 0.50, 0.75, 0.975))
+  
+  ## Base plot
+  plot(1, type = "n", axes = F, ann = F,
+       xlim = c(1, 5),
+       ylim = range(total_work) )
+  
+  ## Plot boxplot time series
+  polygon(x = c(1:5, 5:1), 
+          y = c(total_work["2.5%", ], rev(total_work["97.5%", ])),
+          col = "cornflowerblue", border = F)
+  
+  polygon(x = c(1:5, 5:1), 
+          y = c(total_work["25%", ], rev(total_work["75%", ])),
+          col = "darkgreen", border = F)
+  
+  lines(x = 1:5, y = total_work["50%", ], lwd = 2)
+  points(x = 1:5, y = total_work["50%", ], pch = 16, cex = 1.5)
+  
+  ## Axis Labels
+  box()
+  axis(side = 1, at = 1:5, labels = c(2010, 2012, 2014, 2016, 2018))
+  axis(side = 2, las = 1)
+  mtext(side = 3, text = "Total otoliths", line = 0.5)
+  
+  abline(h = sum(collection$total_requested), lty = 'dashed')
+  
+  ############################################################################
+  ####   Plot percentage of > 30 collections
+  ############################################################################
+  total_work <- apply(X = bootstrap_over_thirty, 
+                      MARGIN = 1,
+                      FUN = quantile,
+                      probs = c(0.025, 0.25, 0.50, 0.75, 0.975))
+  
+  ## Base plot
+  plot(1, type = "n", axes = F, ann = F,
+       xlim = c(1, 5),
+       ylim = range(total_work) )
+  
+  ## Plot boxplot time series
+  polygon(x = c(1:5, 5:1), 
+          y = c(total_work["2.5%", ], rev(total_work["97.5%", ])),
+          col = "cornflowerblue", border = F)
+  
+  polygon(x = c(1:5, 5:1), 
+          y = c(total_work["25%", ], rev(total_work["75%", ])),
+          col = "darkgreen", border = F)
+  
+  lines(x = 1:5, y = total_work["50%", ], lwd = 2)
+  points(x = 1:5, y = total_work["50%", ], pch = 16, cex = 1.5)
+  
+  ## Axis Labels
+  box()
+  axis(side = 1, at = 1:5, labels = c(2010, 2012, 2014, 2016, 2018))
+  axis(side = 2, las = 1)
+  mtext(side = 3, text = "Prop. > 30 otoliths", line = 0.5)
+  
   dev.off()
 }
-
-
