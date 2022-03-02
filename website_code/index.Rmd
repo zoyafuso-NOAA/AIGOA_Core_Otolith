@@ -50,12 +50,12 @@ string <- glue::glue( "| Common Name | Stock Assessment Author |
    |:-----------:|:-----------------------:|")
 
 for (irow in order(collection$PI)) {
-  # html_species <- 
-  #   gsub(x = collection$common_name[irow], 
-  #        pattern = " ", 
-  #        replacement = "%20")
+  html_species <-
+    gsub(x = collection$common_name[irow],
+         pattern = " ",
+         replacement = "_")
   string <- glue::glue(string,
-                       "\n| [{collection$common_name[irow]}](docs/{collection$common_name[irow]}.html)| {collection$PI[irow]}  |")
+                       "\n| [{collection$common_name[irow]}](docs/{html_species}.html)| {collection$PI[irow]}  |")
 }
 
 cat(string)

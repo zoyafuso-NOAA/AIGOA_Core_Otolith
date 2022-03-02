@@ -15,7 +15,10 @@ collection <- readxl::read_xlsx("data/AI_core_collections.xlsx",
 for (irow in 1:(nrow(collection) - 1)) {
   species_name <- collection$common_name[irow]
   rmarkdown::render(input = "website_code/core_otolith_reports.Rmd", 
-                    output_file = paste0(species_name, ".html"), 
+                    output_file = paste0(gsub(x = species_name,
+                                              pattern = " ", 
+                                              replacement = "_"),
+                                         ".html"), 
                     output_dir = "docs/", 
                     output_format = "html_document")
 }
