@@ -1,9 +1,12 @@
 ---
 title: "2022 Aleutian Islands Bottom Trawl Survey"
 output: html_document
+baseurl: '/zoyafuso-NOAA.github.io'
 ---
 
 ```{css, echo=FALSE}
+
+
 body {
   background-color: white;
 } 
