@@ -6,7 +6,7 @@ requests.
 
 |                              Common Name                              | Stock Assessment Author |
 |:---------------------------------------------------------------------:|:-----------------------:|
-| [northern rock sole](results/species_reports/northern rock sole.html) |     Carey McGilliard    |
+| [northern rock sole](results/species_report/northern rock sole.html) |     Carey McGilliard    |
 |                           southern rock sole                          |     Carey McGilliard    |
 |                              Pacific cod                              |       Ingrid Spies      |
 |                             dusky rockfish                            |      Jane Sullivan      |
