@@ -55,7 +55,7 @@ for (irow in order(collection$PI)) {
          pattern = " ", 
          replacement = "%20")
   string <- glue::glue(string,
-                       "\n| [{collection$common_name[irow]}](../docs/{html_species}.html)| {collection$PI[irow]}  |")
+                       "\n| [{collection$common_name[irow]}](docs/{html_species}.html)| {collection$PI[irow]}  |")
 }
 
 cat(string)
