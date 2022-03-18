@@ -14,7 +14,6 @@ rm(list = ls())
 ###############################################################################  
 library(readxl)
 library(tidyr)
-library(rgdal)
 
 ##################################################
 ####   Retrive AI RACE data (2010-2018) from the sumfish package
@@ -131,17 +130,17 @@ for (iter in 1:n_iters) {
   ## Draw the bootstrap sample, stratified by stratum and year
   bootstrap_hauls <- list()
   
-  for (iyear in years) {
+  for (iyear in 1:n_years) {
     boot_idx <- c()
     for (istratum in sort(unique(catch_wide$STRATUM)) ) {
       isample <- allocation[istratum]
       boot_idx <- c(boot_idx, 
                     sample(x = which(catch_wide$STRATUM == istratum
-                                     & catch_wide$CRUISE == iyear), 
+                                     & catch_wide$CRUISE == years[iyear]), 
                            size = isample, 
                            replace = TRUE))
     }
-    bootstrap_hauls[[iyear]] <- catch_wide[boot_idx, ]
+    bootstrap_hauls[[paste0(years[iyear])]] <- catch_wide[boot_idx, ]
   }
   
   ## Optim function 
@@ -204,12 +203,12 @@ for (iter in 1:n_iters) {
                return_what = "obj")
   
   ## Save optimal results
-  boot_spp[iter, , ] <- fn_(collect = best_collect,
+  boot_spp[iter, , ] <- fn_(collect = test$par,
                             bootstrap_hauls_ = bootstrap_hauls,
                             collection_input = collection,
                             return_what = "total_by_spp")
   
-  boot_haul[iter, , ] <- fn_(collect = best_collect,
+  boot_haul[iter, , ] <- fn_(collect = test$par,
                              bootstrap_hauls_ = bootstrap_hauls,
                              collection_input = collection,
                              return_what = "total_by_haul")
