@@ -1,0 +1,20 @@
+species,species_code,target,min_val,max_depth,sample_type,init_collect
+Atka mackerel,21921,100,0,2000,random,5
+walleye pollock,21740,1500,5,2000,random,5
+Pacific cod,21720,1000,0,2000,random,5
+northern rock sole,10261,500,0,2000,random,5
+southern rock sole,10262,500,0,2000,random,5
+rex sole,10200,500,10,2000,random,5
+Dover sole,10180,500,5,2000,random,5
+flathead sole,10130,500,10,2000,random,5
+arrowtooth flounder,10110,900,2,2000,random,5
+shortspine thornyhead,30020,350,3,2000,random,5
+rougheye rockfish,30051,400,0,2000,stratified,1
+blackspotted rockfish,30052,500,0,2000,stratified,1
+Pacific ocean perch,30060,1000,0,2000,random,5
+northern rockfish,30420,700,0,2000,random,5
+shortraker rockfish,30576,400,0,2000,stratified,1
+dusky rockfish,30152,500,0,2000,random,5
+sharpchin rockfish,30560,200,0,2000,stratified,4
+redstripe rockfish,30430,200,0,2000,stratified,4
+sablefish,20510,600,5,200,random,5
