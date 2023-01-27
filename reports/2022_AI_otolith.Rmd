@@ -1,0 +1,49 @@
+---
+title: "2022 AI BTS otolith collection results"
+author: "Zack Oyafuso (zack.oyafuso@noaa.gov); Ned Laman (ned.laman@noaa.gov)"
+date: "25 October 2022"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Hi Sandra and Chris,
+
+Ned and I negotiated the otolith requests with Kalei, Sandra, Paul, Jane, Meaghan, Carey, Ingrid, and Steve for their respective stocks for the 2022 Aleutian Islands bottom trawl survey. This is a table of the total otolith pair requested versus collected across the 16 species that were requested.
+
+```{r, echo = F, include = F}
+library(knitr)
+```
+
+```{r, echo = F}
+AI_report <- read.csv(file = "../reports/202201_AI_otolith.csv")
+knitr::kable(AI_report, 
+             align = c("c", "l", "l", "c", "c", "l"), 
+             col.names = c("Species Code", "Species Name", "Common Name", 
+                           "Total Requested", "Total Collected", "Notes"))
+```
+
+
+Twelve of the 16 species' otolith targets were met or within 10%. Four species 
+were under: Greenland turbot and shortraker, harlequin, and rougheye rockfish. 
+For these four species, the total number of individuals observed (caught) were 
+much less than the total number of otoliths collected (see below). 
+
+```{r, echo = F, message = F}
+under_lens <- readRDS("../reports/under_lens.rds")
+idx <- match(names(under_lens), AI_report$species_code)
+kable(data.frame("Species Code" = AI_report$species_code[idx],
+                 "Common Name" = AI_report$common_name[idx],
+                 "Total Otoliths Requested" = AI_report$total_requested[idx],
+                 "Total Individuals Observed" = as.numeric(under_lens),
+                 "Total Otoliths Collected" = AI_report$total_collected[idx],
+                 check.names = F),
+      align = c("c", "l", "c", "c", "c"))
+```
+
+Five Greenland turbot and two harelquin rockfish that could have been 
+collected were missed by accident. Eight rougheye rockfish and 97 shortraker 
+rockfish were not collected because of the collection rule (maximum 10 and 12 
+random/haul, respectively).
