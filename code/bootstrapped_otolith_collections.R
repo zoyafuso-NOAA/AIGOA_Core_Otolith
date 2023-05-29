@@ -151,7 +151,6 @@ for (iter in 1:n_boots) { ## Loop over iterations -- start
   ## minimize the summed absolute difference between the total otolith request
   ## and the totals collected for each year
   for (ispp in spp_codes) {
-    # for (ispp in c("10261", "10262")){
     
     ## Set up temporary control variables
     sample_type <- collection$sample_type[collection$species_code == ispp]
@@ -185,7 +184,7 @@ for (iter in 1:n_boots) { ## Loop over iterations -- start
     
   } ## Loop over species -- end
   
-  if(iter%%50 == 0) print(paste0("Finished with ", iter, " of ", n_boots))
+  if(iter%%10 == 0) print(paste0("Finished with ", iter, " of ", n_boots))
 } ## Loop over iterations -- end
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -218,18 +217,18 @@ collection$final_collect <-
     4,  # Pacific cod, Up to 4 random/haul
     4,  # northern rock sole, Up to 4 random/haul
     3,  # southern rock sole, If >= 5 then collect 3 random/haul, 0 otherwise
-    2,  # rex sole, if >= 10 then collect 2 random/haul, 0 otherwise
+    3,  # rex sole, if >= 10 then collect 2 random/haul, 0 otherwise
     3,  # Dover sole, If >= 3 then collect 3 random/haul, 0 otherwise
-    2,  # flathead sole, If >= 5 then collect 3 random/haul, 0 otherwise
+    2,  # flathead sole, If >= 5 then collect 2 random/haul, 0 otherwise
     2,  # arrowtooth flounder, If >= 10 then collect 2 random/haul, 0 otherwise
-    5,  # rougheye rockfish, Up to 5 random/haul
+    4,  # rougheye rockfish, Up to 5 random/haul
     10, # blackspotted rockfish, Up to 10 random/haul
     5,  # Pacific ocean perch, If >= 5 then collect 5 random/haul, 0 otherwise
-    20, # northern rockfish, Up to 20 random/haul
+    15, # northern rockfish, Up to 20 random/haul
     20, # shortaker rockfish, Up to 20 random/haul
     10, # dusky rockfish, Up to 10 random/haul
     1,  # silvergray rockfish, 1 per cm/sex/haul
-    1,  # harlequin rockfish, 1 per cm/sex/haul
+    2,  # harlequin rockfish, 2 per cm/sex/haul
     2)  # sablefish, Up to 2 random/haul for hauls shallower than 200 m
 
 for (iter in 1:n_boots) { ## Loop over iterations -- start
@@ -254,7 +253,6 @@ for (iter in 1:n_boots) { ## Loop over iterations -- start
   bootstrap_hauls <- catch_wide[boot_idx, ]
   
   for (ispp in spp_codes) {
-    # for (ispp in "10261") {
     
     ## Set up temporary control variables
     sample_type <- collection$sample_type[collection$species_code == ispp]
@@ -289,7 +287,7 @@ for (iter in 1:n_boots) { ## Loop over iterations -- start
           MARGIN = c(1, 2),
           FUN = function(x) sum(x))
   
-  if(iter%%50 == 0) print(paste0("Finished with ", iter, " of ", n_boots))
+  if(iter%%10 == 0) print(paste0("Finished with ", iter, " of ", n_boots))
 }
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -298,11 +296,12 @@ for (iter in 1:n_boots) { ## Loop over iterations -- start
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 over_30_TF <- apply(X = bootstrap_oto_main,
                     MARGIN = c(1, 2, 4),
-                    FUN = function(x) sum(x) > 35 )
+                    FUN = function(x) sum(x) > 30 )
 over_30 <- apply(X = over_30_TF,
                  MARGIN = 3:2,
                  FUN = function(x) round(x = sum(x) / n_haul, digits = 2))
 
+par(mfrow = c(1, 1))
 boxplot(over_30)
 
 summary(apply(bootstrap_oto_main,
@@ -321,6 +320,8 @@ for (ispp in paste(spp_codes)) {
   boxplot( t(bootstrap_oto_cruise[ , ispp, ]), 
            main = collection$species[collection$species_code == ispp], 
            cex.main = 0.75, 
+           cex.axis = 0.75,
+           names = c(2019, 2021),
            las = 1)
   abline(h = collection$target[collection$species_code == ispp]) 
 }
@@ -328,4 +329,5 @@ for (ispp in paste(spp_codes)) {
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##   Save objects
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-c("bootstrap_opt_collect", "bootstrap_oto_cruise", "bootstrap_oto_main", "over_30")
+c("bootstrap_opt_collect", "bootstrap_oto_cruise", 
+  "bootstrap_oto_main", "over_30")
