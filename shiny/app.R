@@ -12,13 +12,12 @@ rm(list = ls())
 library(shiny)
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-##   Import data
+##   Import data. Make sure file names match those in the shiny/ directory
 ##   Import stratum allocations for a given year, modify for given year/survey
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+region <- c("GOA", "AI")[1]
 load("GOA_shiny_data.RData")
-
-allocation_filename <- "GOA2023_Station_allocation_520_EW.csv"
-allocation_table <- read.csv(file = allocation_filename)
+allocation_table <- read.csv(file = "GOA2023_Station_allocation_520_EW.csv")
 allocation <- table(allocation_table$stratum)
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,7 +36,7 @@ strata <- names(x = allocation)
 ui <- shiny::fluidPage(
   
   ## Main Title
-  shiny::titlePanel(title = paste0("GOA Bottom Trawl Survey Otolith ",
+  shiny::titlePanel(title = paste0(region, " Bottom Trawl Survey Otolith ",
                                    "Collection Planner")),
   
   ## All the user inputs will live on the left sidebar of the app
@@ -151,7 +150,7 @@ server <- function(input, output, session) {
   })
   
   output$summary <- shiny::renderPlot({
-    par(mar = c(3, 3, 3, 1))
+    par(mar = c(6, 6, 3, 1))
     boxplot(bootstrap_df(), names = years, col = "white",
             las = 1, xlab = "Year", ylab = "Total Collected Otoliths")
     abline(h = input_target(), lty = "dotted", col = "darkgrey", lwd = 2)

@@ -1,0 +1,13 @@
+name: ai_otolith_app
+title: ai_otolith_app
+username:
+account: zoyafuso-noaa
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11226032
+bundleId: 8255650
+url: https://zoyafuso-noaa.shinyapps.io/ai_otolith_app/
+when: 1707929156.48028
+lastSyncTime: 1707929156.48028
+asMultiple: FALSE
+asStatic: FALSE

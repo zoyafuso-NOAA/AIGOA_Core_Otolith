@@ -5,9 +5,9 @@ account: zoyafuso-noaa
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 9204978
-bundleId: 7276381
+bundleId: 7284167
 url: https://zoyafuso-noaa.shinyapps.io/aigoa_otolith_planning_tool/
-when: 1685345922.35557
-lastSyncTime: 1685345922.35557
+when: 1685492329.27828
+lastSyncTime: 1685492329.27828
 asMultiple: FALSE
 asStatic: FALSE

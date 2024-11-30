@@ -1,38 +1,41 @@
 
-# AI/GOA Core otolith request analysis
+# **Aleutian Islands/Gulf of Alaska Otolith Planning Tool**
 
-## [Core Otolith Requests](#top)
+## **For Users**
+This repo holds the code that maintains an RShiny application that allows 
+users to tune the otolith collection rules (how many to collect, when to 
+collect) to meet an acquired target total for a given species. 
+Recent historical survey data (e.g., last three survey years) are bootstrapped
+and the user-defined otolith collection rules are applied to the observed
+numbers of fish caught. The summary output is a boxplot time series showing 
+the distribution of total collected otoliths across bootstrapped samples. 
 
-The goal is to assess the feasibility of the core otolith request using
-haul data from the past five survey years. Requests for each species
-include collection rules and a total otolith pair requested. The main
-questions that drive the feasibility of the requeted core otolith
-requests are:
+### [Otolith Planning RShiny Tool](https://zoyafuso-noaa.shinyapps.io/aigoa_otolith_planning_tool/)
+
+## **For Repo Maintainer**
+
+### Pre-survey season maintenance:
+
+These are the steps to maintain the tool every year:
+
+1) Create the RShiny data: Run the code/get_ai_data.R script for a given 
+region for the three most recent years of survey data. Make sure the resultant 
+data output lives in the ai_otolith_app/ directory. These data objects include
+haul-level count data for the set of species and the station allocation across
+strata. 
+
+3) In shiny/app.R change the file names for the survey data and station 
+allocation to whatever is in the shiny/ directory. 
+
+### Pre-season report
+
+Use the script in code/bootstrapped_otolith_collections.R to gauge three 
+aspects of otolith planning.
 
 1)  Given the requested collection rules, how well could the survey
     achieve the requested target across species?
+
 2)  How many otolith pairs are collected during each haul?
+
 3)  Given 30 otolith pairs are a soft maximum haul-total, how often are hauls
     over this threshold?
-
-For the last two survey years, hauls were sampled with replacement
-until a bootstrapped sample of 520 hauls were obtained. The collection
-rule was applied to each haul and the total number of otoliths collected
-was totaled. This was repeated 1000 times to obtain a distribution of
-total otoliths collected conditional on the collection rule requested
-this year.
-
-## Repo structure
-
-data/ : contains the station allocation by stratum, collection requests, and historical survey data for either AI or GOA.
-code/ : contains the scripts used for the analysis
-reports/ : contains the RMD scripts used to generate post-cruise reports for the stock assessors. 
-
-## Useful links
-
-link to GOA otolith roundup
-
-link to CORE otolith requests
-
-links to 
-
