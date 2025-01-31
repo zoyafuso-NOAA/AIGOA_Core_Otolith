@@ -5,7 +5,7 @@ account: zoyafuso-noaa
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13487016
-bundleId: 9441148
+bundleId: 9730266
 url: https://zoyafuso-noaa.shinyapps.io/goa_otolith_app/
 version: 1
 asMultiple: FALSE
