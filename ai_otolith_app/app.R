@@ -29,7 +29,7 @@ allocation <- readRDS(file = "ai_station_allocation.RDS")
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 species_codes <- as.character(x = ai_raw_data$species$SPECIES_CODE)
 names(x = species_codes) <- ai_raw_data$species$COMMON_NAME
-years <- ai_raw_data$survey_design$YEAR
+years <- ai_raw_data$survey$YEAR
 strata <- ai_raw_data$strata$STRATUM
 
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
